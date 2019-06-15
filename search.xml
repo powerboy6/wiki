@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[Play Framework遇到的问题汇总]]></title>
+    <url>%2Fwiki%2F2019%2F06%2F15%2Fplay_run_issue_1%2F</url>
+    <content type="text"><![CDATA[采用的环境是Java 11.0.3（该用下一个LTS版本了。。）和sbt 1.2.81. sbt run时遇到warning: Illegal reflective access by com.google.protobuf.UnsafeUtil据查是个无害的warning。可以通过以下方法屏蔽之 项目根目录添加.sbtopts文件，内容如下： 123-J-XX:+IgnoreUnrecognizedVMOptions-J--add-opens=java.base/java.nio=ALL-UNNAMED-J--add-opens=java.base/java.lang=ALL-UNNAMED]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[Circle CI 持续集成构建Github Pages]]></title>
+    <url>%2Fwiki%2F2019%2F03%2F27%2Fcircle_ci%2F</url>
+    <content type="text"><![CDATA[为啥要用Circle CI？ 网上烂大街的Travis CI和Github Pages集成的教程，就不去step by step follow了，自己整个新鲜的玩玩，加深理解。 个人感觉是Circle CI更Modern一些，天然基于Docker进行构建。 接Circle CI的公司明显逼格比Travis CI高，哈哈。。 每月1000分钟的免费构建时长，足够用啦 首先肯定是用Github账号去登录Circle CI Circle CI中会展示Github下所有的仓库。我是pages的源码放在一个仓库，打包编译好的文件放在另一个仓库。所以我选择追踪（follow）源码仓库用于CI。点击项目右侧的Set Up Project开始配置项目 配置项目 一些基本的选项：操作系统选Linux，语言选Node（我用的是Hexo，基于Node.js。这个可以根据实际需要选择） 就这两项配置，其余的就是写构建配置文件啦 构建脚本 唔，页面上有说，你应该把构建配置文件放在/.circleci/config.yml 然后可以根据提供的样例配置依葫芦画瓢写自己的，或者是更改其中的一些选项（如果不复杂的话） 下面是我的配置文件供大家参考，其中会有注释说明 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455# Javascript Node CircleCI 2.0 configuration file## Check https://circleci.com/docs/2.0/language-javascript/ for more details#version: 2jobs:build: docker: # specify the version you desire here - image: circleci/node:10 # 这里把版本升了下 environment: TZ: "Asia/Shanghai" # Specify service dependencies here if necessary # CircleCI maintains a library of pre-built images # documented at https://circleci.com/docs/2.0/circleci-images/ # 用不到MongoDB哈，去掉 # - image: circleci/mongo:3 working_directory: ~/repo environment: TZ: "Asia/Shanghai" # 时区改成上海 steps: - checkout # 第一步，拉下代码待打包编译 # Download and cache dependencies - restore_cache: keys: - v1-dependencies-&#123;&#123; checksum "package.json" &#125;&#125; # fallback to using the latest cache if no exact match is found - v1-dependencies- - run: npm install # 第二步，安装依赖的包。上面会将先前安装过的依赖进行缓存，避免重复下载安装，节省 - save_cache: # 这里如果缓存没命中将重新缓存下载的依赖包 paths: - node_modules key: v1-dependencies-&#123;&#123; checksum "package.json" &#125;&#125; - run: # 这里用来配置将打包编译好的产物推送到目标仓库的用户信息 name: Config git user command: | git config --global user.email "某人的邮箱" git config --global user.name "某人的用户名" # 这里需要给用于存放打包后文件的仓库添加一个具备写权限的Deploy Key。具体添加方法可以自行搜索啦 - add_ssh_keys: fingerprints: - "Key的指纹不给看&gt;o&lt;" - run: # Hexo简单的打包编译&amp;部署（推送至目标仓库）动作 name: Deploy command: | npx hexo g npx hexo d 就。。结束了？ 对！就这么点儿步骤！ 以后再有新的commit push到上面set up OK的仓库中，就会触发配置文件中描述的流程的构建 然后去pages的地址F5一下（据网络和缓存会有一定延迟，那就多按几下→_→），新内容出现了！ 问题点 每次构建都是全量的，重复动作会很多，Hexo貌似不支持。。 直接将key写在构建配置文件中不是太妥当。Circle CI好像提供了从外部注入的方法，折腾了很久没有通，还请大佬指路！]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[Hello World]]></title>
+    <url>%2Fwiki%2F2019%2F03%2F25%2Fhello-world%2F</url>
+    <content type="text"><![CDATA[先大声向世界问声好吧 折腾了半天弄出个这玩意儿，虽然不怎么费脑子但也挺累的。 从此把技术上的技巧和心得放到这里，便于自己查阅的同时也避免让大家走同样弯路。 也会逐渐把自己“私藏”的东西挪过来，不过那些可能有些过时了。 这个站点主要包含技术相关的内容，之后会有个人站点会放些其他的东西，比如八卦什么的。]]></content>
+  </entry>
+</search>
